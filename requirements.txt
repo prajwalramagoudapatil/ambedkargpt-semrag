@@ -1,0 +1,19 @@
+# core
+python-dateutil>=2.8
+numpy>=1.24
+scikit-learn>=1.2
+sentence-transformers>=2.2.2
+spacy>=3.5
+networkx>=3.1
+python-louvain>=0.16
+tqdm
+pypdf>=3.8
+transformers>=4.30
+# faiss-cpu>=1.7.4  # or chromadb if you prefer
+nltk
+langchain>=0.0.208
+
+#  pip install pdfminer.six
+
+langchain-groq
+langchain_ollama

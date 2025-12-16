@@ -1,0 +1,9 @@
+embedding_model: "sentence-transformers/all-MiniLM-L6-v2"
+max_tokens_chunk: 1024
+subchunk_tokens: 128
+buffer_size: 5
+theta: 0.75            # similarity threshold for chunking (tune)
+tau_e: 0.6             # entity-query sim threshold
+tau_d: 0.55            # chunk-entity sim threshold
+top_k_local: 5
+top_k_global: 3

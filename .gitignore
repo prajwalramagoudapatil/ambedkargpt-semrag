@@ -1,0 +1,66 @@
+# Python cache & compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.env/
+.env.*
+.venv/
+myenv/
+.myenv/
+
+# Jupyter & IDE
+.vscode/
+.idea/
+*.iml
+
+
+# Logs & temporary files
+*.log
+*.tmp
+*.swp
+
+# ML / SemRAG generated artifacts
+data/processed/
+data/embeddings/
+data/index/
+data/faiss/
+data/cache/
+tests/
+zzz/
+
+# Large model files (local LLMs)
+models/
+*.gguf
+*.bin
+*.pt
+*.onnx
+*.safetensors
+
+# Pickle / serialized files
+*.pkl
+*.pickle
+
+# Environment configs
+.env.local
+.env.production
+secrets.yaml
+config.json
+Raama.json
+
+# ================================
+# Build / distribution
+build/
+dist/
+*.egg-info/
+
+
+.coverage
+htmlcov/
+
+
+# DO NOT ignore __init__.py
+
+!**/__init__.py
