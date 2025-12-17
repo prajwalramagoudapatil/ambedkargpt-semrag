@@ -38,7 +38,7 @@ class GraphBuilder:
                 self.G.add_node(o)
                 self.node_text[o] = o
                 self.G.nodes[o]['summary'] = 'object'
-            # add or increment edge with relation label
+            # add or increment edge with relation label      summary
             if self.G.has_edge(s, o):
                 self.G[s][o].setdefault('weight', 0)
                 self.G[s][o]['weight'] += 1
