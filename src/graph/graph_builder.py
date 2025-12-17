@@ -37,7 +37,7 @@ class GraphBuilder:
             if not self.G.has_node(o):
                 self.G.add_node(o)
                 self.node_text[o] = o
-                self.G.nodes[0]['summary'] = 'object'
+                self.G.nodes[o]['summary'] = 'object'
             # add or increment edge with relation label
             if self.G.has_edge(s, o):
                 self.G[s][o].setdefault('weight', 0)
@@ -48,6 +48,7 @@ class GraphBuilder:
 
     def finalize(self):
         # compute node embeddings for retrieval later
+        print('Creating Embeddings....')
         texts = [self.node_text[n] for n in self.G.nodes()]
         embeds = self.embedder.encode(texts, convert_to_numpy=True)
         for n, emb in zip(self.G.nodes(), embeds):
