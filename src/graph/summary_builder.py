@@ -81,7 +81,7 @@ def build_community_summary(graph: nx.Graph,
         if count < 0:
             break
     
-    with open('data/procesed/community_summary.json', mode='w', encoding='utf-8') as file:
+    with open('data/processed/community_summary.json', mode='w', encoding='utf-8') as file:
         json.dump(obj=llm_summary, fp=file, )
     
     print('Saved summary.!! :-)')
