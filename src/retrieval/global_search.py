@@ -11,8 +11,8 @@ class GlobalGraphRAG:
         cfg = yaml.safe_load(open(cfg_path))
         self.top_k = cfg.get('top_k_global', 3)
         self.communities = communities or {}  # cid -> list(nodes)
-        with open('data/processed/community_summary.json', 'r', encoding='utf-8') as f:
-            self.llm_commu_summary = json.load(f)
+        # with open('data/processed/community_summary.json', 'r', encoding='utf-8') as f:
+        #     self.llm_commu_summary = json.load(f)
         
 
     def community_summary(self, nodes):
@@ -32,7 +32,7 @@ class GlobalGraphRAG:
         # 1) score communities by similarity between query and community summary
         comm_scores = []
         for cid, nodes in self.communities.items():
-            summary = self.llm_commu_summary[cid]
+            summary = self.community_summary(nodes)
             score = self.score_point(summary, query)
             comm_scores.append((cid, score, summary))
         comm_scores.sort(key=lambda x: x[1], reverse=True)
