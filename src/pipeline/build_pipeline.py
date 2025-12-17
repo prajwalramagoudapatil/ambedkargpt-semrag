@@ -4,6 +4,7 @@ from graph.graph_builder import GraphBuilder
 from graph.community_detector import detect_communities
 from llm.llm_client import generate_answer
 from pathlib import Path
+from graph.summary_builder import build_community_summary
 
 current_file_dir = Path(__file__).resolve().parent # directory of ambedkargpt.py = src/pipeline
 
@@ -31,6 +32,9 @@ def build_pipeline(pdf_path= (data_dir / "Ambedkar_book.pdf")):
     comms = detect_communities(G)
     print("Saving communities...")
     pickle.dump(comms, open("data/processed/communities.pkl","wb"))
+    print('Create community summary')
+    build_community_summary(graph=G, communities=comms, llm_model='gemma3:1b')
+    
     return chunks, G, comms
 
 if __name__ == '__main__':
