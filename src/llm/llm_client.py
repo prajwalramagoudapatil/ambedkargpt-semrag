@@ -41,7 +41,7 @@ def build_prompt(query: str, local_results: List[dict], global_points: List[tupl
 def generate_with_langchain_ollama(prompt, model_name: str = "llama3.2:1b"):
 
     response = ollama.invoke(prompt)
-    return response
+    return response.content
 
 # def generate_with_langchain_groq(prompt: str, model_name: str = "llama-3.1-8b-instant"):
 #     llm = ChatGroq(

@@ -22,9 +22,9 @@ class LocalGraphRAG:
             if emb is None:
                 continue
             s = float(cosine_similarity([q_emb], [emb])[0][0])
-            sims.append((n, s))
+            sims.append((n, s))     # (node, similart )
         sims.sort(key=lambda x: x[1], reverse=True)
-        return sims
+        return sims         # return List(node, simil with query)
 
     def find_chunks_for_entity(self, entity, chunks):
         # naive: return chunks containing the entity string
@@ -39,7 +39,8 @@ class LocalGraphRAG:
         ent_sims = self.entity_similarity(q_emb)
         # filter by tau_e
         ent_sims = [ (n, s) for n,s in ent_sims if s >= self.tau_e ]
-        results = []
+        chunk_scores = {}  # chunk_idx -> best score
+        chunk_data = {}    # chunk_idx -> stored metadata
         for ent, ent_score in ent_sims[:self.top_k]:
             related_chunks = self.find_chunks_for_entity(ent, chunks)
             # for each chunk compute sim(g,v) (approx: chunk embedding vs entity embedding)
@@ -47,8 +48,31 @@ class LocalGraphRAG:
                 ch_emb = self.embedder.encode([ch], convert_to_numpy=True)[0]
                 v_emb = self.G.nodes[ent]['emb']
                 sim_gv = float(cosine_similarity([ch_emb], [v_emb])[0][0])
-                if sim_gv >= self.tau_d:
-                    results.append({'entity':ent, 'entity_score': ent_score, 'chunk_idx': idx, 'chunk_text': ch, 'chunk_entity_sim': sim_gv})
-        # rank by combined score
-        results.sort(key=lambda r: r['entity_score'] * 0.6 + r['chunk_entity_sim'] * 0.4, reverse=True)
-        return results[:self.top_k]
+                
+                if sim_gv < self.tau_d:
+                    continue
+
+                # combined score (Equation 4 style)
+                final_score = 0.6 * ent_score + 0.4 * sim_gv
+
+                # Deduplicate by chunk_idx
+                if idx not in chunk_scores or final_score > chunk_scores[idx]:
+                    chunk_scores[idx] = final_score
+                    chunk_data[idx] = {
+                        "chunk_idx": idx,
+                        "chunk_text": ch,
+                        "score": final_score,
+                        "entities": [ent]
+                    }
+                else:
+                    # same chunk from different entity
+                    chunk_data[idx]["entities"].append(ent)
+
+        # Sort by score
+        ranked = sorted(
+            chunk_data.values(),
+            key=lambda x: x["score"],
+            reverse=True
+        )
+
+        return ranked[:self.top_k]
